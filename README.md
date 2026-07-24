@@ -1,1 +1,358 @@
-# QA-checklist
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>QA Task Manager Tool</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; padding: 20px; background: #f4f6f9; color: #333; }
+        .container { max-width: 850px; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin: 0 auto; }
+        h2 { margin-top: 0; padding-bottom: 10px; color: #111; }
+        h3 { margin: 25px 0 15px 0; color: #0056b3; border-bottom: 1px solid #e1e4e8; padding-bottom: 5px; font-size: 18px; }
+        .instruction { color: #666; margin-bottom: 20px; }
+        
+        /* Tab Navigation Styles */
+        .tab-menu { display: flex; border-bottom: 2px solid #eaeaea; margin-bottom: 20px; gap: 5px; overflow-x: auto; }
+        .tab-btn { background: #e9ecef; color: #495057; border: none; padding: 12px 20px; font-size: 16px; font-weight: bold; cursor: pointer; border-radius: 6px 6px 0 0; transition: all 0.2s; white-space: nowrap; }
+        .tab-btn:hover { background: #dee2e6; }
+        .tab-btn.active { background: #007bff; color: white; }
+        
+        /* Task Content Area */
+        .task-content { display: none; }
+        .task-content.active { display: block; }
+        
+        /* Checklist Styles - ADJUSTED TO 6px MARGIN & 10px PADDING */
+        .qa-item { display: flex; align-items: start; margin-bottom: 6px; padding: 6px 10px; border-radius: 6px; transition: background 0.2s; }
+        .qa-item:hover { background: #f8f9fa; }
+        input[type="checkbox"] { margin-top: 3px; margin-right: 12px; transform: scale(1.15); cursor: pointer; }
+        label { cursor: pointer; line-height: 1.4; font-size: 15px; }
+        .checked-label { font-weight: bold; color: #d9534f; }
+        
+        /* Static Reference List Styles */
+        .reference-list { padding-left: 20px; margin-top: 10px; }
+        .reference-list li { margin-bottom: 6px; line-height: 1.3; font-size: 14px; color: #495057; }
+        
+        /* Note Box Styles */
+        .notes-section { margin-top: 25px; margin-bottom: 15px; background: #f8f9fa; padding: 15px; border-radius: 8px; border: 1px solid #e1e4e8; }
+        .notes-section label { display: block; font-weight: bold; margin-bottom: 6px; color: #333; }
+        .notes-section input[type="text"] { width: 200px; padding: 6px 10px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px; margin-bottom: 12px; }
+        .notes-section textarea { width: 100%; height: 90px; padding: 10px; border: 1px solid #ced4da; border-radius: 6px; font-family: inherit; font-size: 14px; box-sizing: border-box; resize: vertical; line-height: 1.4; }
+        .closing-text { margin-top: 10px; font-size: 14px; color: #555; font-style: italic; }
+
+        /* Copy Buttons */
+        button.copy-btn { background: #007bff; color: white; border: none; padding: 14px 20px; font-size: 16px; border-radius: 6px; cursor: pointer; width: 100%; font-weight: bold; margin-top: 15px; transition: background 0.2s; }
+        button.copy-btn:hover { background: #0056b3; }
+        
+        .alert { margin-top: 15px; padding: 12px; background: #d4edda; color: #155724; border-radius: 6px; display: none; text-align: center; font-weight: 500; }
+        .preview-box { margin-top: 20px; padding: 15px; background: #e9ecef; border-radius: 6px; font-family: monospace; white-space: pre-wrap; font-size: 13px; display: none; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>QA Task Manager Tool</h2>
+    <p class="instruction">Select your task type below. Check the boxes for any items that are <strong>errors / failed</strong>, add optional notes, then click copy. Feedback lists below are for reference only and will not be copied.</p>
+    
+    <div class="tab-menu">
+        <button class="tab-btn active" onclick="switchTab(event, 'blogTask')">MOO Analysis</button>
+        <button class="tab-btn" onclick="switchTab(event, 'faqTask')">FAQ Analysis</button>
+        <button class="tab-btn" onclick="switchTab(event, 'blogEditTask')">Blog Editing</button>
+        <button class="tab-btn" onclick="switchTab(event, 'vendorAnalysisTask')">Vendor Analysis</button>
+        <button class="tab-btn" onclick="switchTab(event, 'vendorImpTask')">Vendor Implementation</button>
+    </div>
+
+    <!-- MOO Analysis -->
+    <div id="blogTask" class="task-content active">
+        <div class="checklist">
+            <div class="qa-item"><input type="checkbox" class="blog-check" id="b1"><label for="b1">1. Keyword mapping is appropriate</label></div>
+            <div class="qa-item"><input type="checkbox" class="blog-check" id="b2"><label for="b2">2. No more than two keywords are mapped to each page</label></div>
+            <div class="qa-item"><input type="checkbox" class="blog-check" id="b3"><label for="b3">3. All keywords that need optimizations are mapped in the PRQ</label></div>
+            <div class="qa-item"><input type="checkbox" class="blog-check" id="b4"><label for="b4">4. NOB is accurate or has been escalated</label></div>
+            <div class="qa-item"><input type="checkbox" class="blog-check" id="b5"><label for="b5">5. Title tag follows style guide guidelines</label></div>
+            <div class="qa-item"><input type="checkbox" class="blog-check" id="b6"><label for="b6">6. Meta description follows style guide guidelines</label></div>
+            <div class="qa-item"><input type="checkbox" class="blog-check" id="b7"><label for="b7">7. All appropriate and optimizable content is accurately included or noted in the PRQ</label></div>
+            <div class="qa-item"><input type="checkbox" class="blog-check" id="b8"><label for="b8">8. Homepage and Category Landing pages’ new sections of content use only FAQs per the style guide guidelines</label></div>
+            <div class="qa-item"><input type="checkbox" class="blog-check" id="b9"><label for="b9">9. Any typos in keywords from previous optimizations have been corrected</label></div>
+            <div class="qa-item"><input type="checkbox" class="blog-check" id="b10"><label for="b10">10. Proposed content edits are free of spelling/grammar errors</label></div>
+            <div class="qa-item"><input type="checkbox" class="blog-check" id="b11"><label for="b11">11. Proposed page copy contains the appropriate number of words for the chosen page type</label></div>
+            <div class="qa-item"><input type="checkbox" class="blog-check" id="b12"><label for="b12">12. Each page has a final word count of at least 1,200 words, unless there are budget constraints</label></div>
+            <div class="qa-item"><input type="checkbox" class="blog-check" id="b13"><label for="b13">13. Keyword density of the final content is between .5% and 2%</label></div>
+            <div class="qa-item"><input type="checkbox" class="blog-check" id="b14"><label for="b14">14. All page copy in the Current Content column remains unchanged and is not green</label></div>
+            <div class="qa-item"><input type="checkbox" class="blog-check" id="b15"><label for="b15">15. Interlinking box on each page is filled out with an appropriate internal link for each target keyword, a link to an indexing page if needed, and a note that the page will be linked in the footer</label></div>
+            <div class="qa-item"><input type="checkbox" class="blog-check" id="b16"><label for="b16">16. Dashboard target keyword mapping matches PRQ target keyword mapping</label></div>
+            <div class="qa-item"><input type="checkbox" class="blog-check" id="b17"><label for="b17">17. All optimized pages have topic keywords mapped to them in the dashboard appropriately</label></div>
+        </div>
+        
+        <div class="notes-section">
+            <label for="blog-analyst">Analyst Name:</label>
+            <input type="text" id="blog-analyst" placeholder="Analyst Name">
+            
+            <label for="blog-notes">Specific Notes:</label>
+            <textarea id="blog-notes" placeholder="Type your notes here..."></textarea>
+            
+            <div class="closing-text">Closing tag: "Please send this back to me when you've made these edits. Thank you!"</div>
+        </div>
+        <button class="copy-btn" onclick="copyCurrentTask('blog-check', 'blog-analyst', 'blog-notes', 'MOO')">Copy MOO Analysis Results</button>
+    </div>
+
+    <!-- FAQ Analysis -->
+    <div id="faqTask" class="task-content">
+        <div class="checklist">
+            <div class="qa-item"><input type="checkbox" class="faq-check" id="f1"><label for="f1">1. FAQ PRQ has between 3 and 10 Q/As in it, or has been escalated</label></div>
+            <div class="qa-item"><input type="checkbox" class="faq-check" id="f2"><label for="f2">2. NOB is accurate or has been escalated</label></div>
+            <div class="qa-item"><input type="checkbox" class="faq-check" id="f3"><label for="f3">3. Keyword is added to each answer</label></div>
+            <div class="qa-item"><input type="checkbox" class="faq-check" id="f4"><label for="f4">4. Geos are used or not used in keywords appropriately</label></div>
+            <div class="qa-item"><input type="checkbox" class="faq-check" id="f5"><label for="f5">5. Spelling and grammar are correct</label></div>
+            <div class="qa-item"><input type="checkbox" class="faq-check" id="f6"><label for="f6">6. Research fact, if included, is accurately paraphrased and cited with a non-competitor source</label></div>
+            <div class="qa-item"><input type="checkbox" class="faq-check" id="f7"><label for="f7">7. Additional facts in the content are cited by non-competitor sources or the client if the facts are reasonable industry knowledge</label></div>
+            <div class="qa-item"><input type="checkbox" class="faq-check" id="f8"><label for="f8">8. Original meanings of the supplied questions and answers are preserved</label></div>
+            
+            <h3>FAQ Analysis Feedback (Reference Only)</h3>
+            <ol class="reference-list">
+                <li>Every keyword is used at least once if possible</li>
+                <li>American English spelling is used (unless the client is not US-based)</li>
+                <li>NOB is included at least once</li>
+            </ol>
+        </div>
+        
+        <div class="notes-section">
+            <label for="faq-analyst">Analyst Name:</label>
+            <input type="text" id="faq-analyst" placeholder="Analyst Name">
+            
+            <label for="faq-notes">Specific Notes:</label>
+            <textarea id="faq-notes" placeholder="Type your notes here..."></textarea>
+            
+            <div class="closing-text">Closing tag: "Please send this back to me when you've made these edits. Thank you!"</div>
+        </div>
+        <button class="copy-btn" onclick="copyCurrentTask('faq-check', 'faq-analyst', 'faq-notes', 'FAQ Analysis')">Copy FAQ Checklist Results</button>
+    </div>
+
+    <!-- Blog Editing -->
+    <div id="blogEditTask" class="task-content">
+        <div class="checklist">
+            <div class="qa-item"><input type="checkbox" class="be-check" id="be1"><label for="be1">1. NOB is accurate or has been escalated</label></div>
+            <div class="qa-item"><input type="checkbox" class="be-check" id="be2"><label for="be2">2. Title and content are compatible</label></div>
+            <div class="qa-item"><input type="checkbox" class="be-check" id="be3"><label for="be3">3. Subheadings have parallel structure</label></div>
+            <div class="qa-item"><input type="checkbox" class="be-check" id="be4"><label for="be4">4. Fact is present, accurately paraphrased, and cited with a non-competitor source</label></div>
+            <div class="qa-item"><input type="checkbox" class="be-check" id="be5"><label for="be5">5. Fact is relevant to client location and services as well as content</label></div>
+            <div class="qa-item"><input type="checkbox" class="be-check" id="be6"><label for="be6">6. Additional facts in the content are cited by non-competitor sources or the client if the facts are reasonable industry knowledge</label></div>
+            <div class="qa-item"><input type="checkbox" class="be-check" id="be7"><label for="be7">7. Topic keyword is relevant to client services, location, and content topic</label></div>
+            <div class="qa-item"><input type="checkbox" class="be-check" id="be8"><label for="be8">8. Topic keyword is present at least once and grammatically correct</label></div>
+            <div class="qa-item"><input type="checkbox" class="be-check" id="be9"><label for="be9">9. HTML is correct</label></div>
+            <div class="qa-item"><input type="checkbox" class="be-check" id="be10"><label for="be10">10. Content doesn’t encourage reader to DIY client's services</label></div>
+            <div class="qa-item"><input type="checkbox" class="be-check" id="be11"><label for="be11">11. Content is positive and relevant to the client's services (and seasonally, geographically, and otherwise)</label></div>
+            <div class="qa-item"><input type="checkbox" class="be-check" id="be12"><label for="be12">12. Content is at least 370, 700, or 1200 words depending on task type</label></div>
+            <div class="qa-item"><input type="checkbox" class="be-check" id="be13"><label for="be13">13. Content is void of grammar, spelling, and punctuation errors</label></div>
+            <div class="qa-item"><input type="checkbox" class="be-check" id="be14"><label for="be14">14. Content and topic are distinct from the client's previously posted blogs</label></div>
+            <div class="qa-item"><input type="checkbox" class="be-check" id="be15"><label for="be15">15. Blog image URL is present and image is relevant to content and client, does not include content with potentially sensitive or controversial topics, and has not been used for another blog on the site already</label></div>
+            
+            <h3>Blog Editing Feedback (Reference Only)</h3>
+            <ol class="reference-list">
+                <li>Title and subheadings use APA capitalization</li>
+                <li>Research facts are no more than three calendar years old and contain a number</li>
+                <li>Research fact is integrated smoothly into the content</li>
+                <li>Content avoids robotic and repetitive sentence structure and language</li>
+                <li>Content is clear and concise</li>
+                <li>Content is no more than 200 words over the minimum word count</li>
+                <li>Content uses inclusive language and a respectful tone</li>
+                <li>Topic keyword is in the blog approximately once every 200 words</li>
+                <li>There are no images in the library that would be a better fit than the currently selected image</li>
+                <li>Content is factually accurate</li>
+                <li>American English spelling is used (unless the client is not US-based)</li>
+                <li>NOB is included at least once</li>
+            </ol>
+        </div>
+        
+        <div class="notes-section">
+            <label for="be-analyst">Analyst Name:</label>
+            <input type="text" id="be-analyst" placeholder="Analyst Name">
+            
+            <label for="be-notes">Specific Notes:</label>
+            <textarea id="be-notes" placeholder="Type your notes here..."></textarea>
+            
+            <div class="closing-text">Closing tag: "Please send this back to me when you've made these edits. Thank you!"</div>
+        </div>
+        <button class="copy-btn" onclick="copyCurrentTask('be-check', 'be-analyst', 'be-notes', 'Blog Edit')">Copy Blog Editing Results</button>
+    </div>
+
+    <!-- Vendor Analysis -->
+    <div id="vendorAnalysisTask" class="task-content">
+        <div class="checklist">
+            <div class="qa-item"><input type="checkbox" class="va-check" id="va1"><label for="va1">1. Keyword mapping is appropriate</label></div>
+            <div class="qa-item"><input type="checkbox" class="va-check" id="va2"><label for="va2">2. No more than two keywords are mapped to each page</label></div>
+            <div class="qa-item"><input type="checkbox" class="va-check" id="va3"><label for="va3">3. All keywords that need optimizations are mapped in the PRQ</label></div>
+            <div class="qa-item"><input type="checkbox" class="va-check" id="va4"><label for="va4">4. NOB is accurate or has been escalated</label></div>
+            <div class="qa-item"><input type="checkbox" class="va-check" id="va5"><label for="va5">5. Title tag follows style guide guidelines</label></div>
+            <div class="qa-item"><input type="checkbox" class="va-check" id="va6"><label for="va6">6. Meta description follows style guide guidelines</label></div>
+            <div class="qa-item"><input type="checkbox" class="va-check" id="va7"><label for="va7">7. All appropriate and optimizable content is accurately included or noted in the PRQ</label></div>
+            <div class="qa-item"><input type="checkbox" class="va-check" id="va8"><label for="va8">8. Homepage and Category Landing pages’ new sections of content use only FAQs per the style guide guidelines</label></div>
+            <div class="qa-item"><input type="checkbox" class="va-check" id="va9"><label for="va9">9. Any typos in keywords from previous optimizations have been corrected</label></div>
+            <div class="qa-item"><input type="checkbox" class="va-check" id="va10"><label for="va10">10. Proposed content edits are free of spelling/grammar errors</label></div>
+            <div class="qa-item"><input type="checkbox" class="va-check" id="va11"><label for="va11">11. Proposed page copy contains the appropriate number of words for the chosen page type</label></div>
+            <div class="qa-item"><input type="checkbox" class="va-check" id="va12"><label for="va12">12. All page copy in the Current Content column remains unchanged and is not green</label></div>
+            <div class="qa-item"><input type="checkbox" class="va-check" id="va13"><label for="va13">13. Special instructions box on each page is filled out with an appropriate internal link for each target keyword and a note that the page will be linked in the footer</label></div>
+            <div class="qa-item"><input type="checkbox" class="va-check" id="va14"><label for="va14">14. Each page has a final word count of at least 1,200 words, unless there are budget constraints</label></div>
+            <div class="qa-item"><input type="checkbox" class="va-check" id="va15"><label for="va15">15. Keyword density of the final content is between .5% and 2%</label></div>
+            
+            <h3>Vendor Analysis Feedback (Reference Only)</h3>
+            <ol class="reference-list">
+                <li>Auto-filled title tag, meta description, and H1/H2 for a MOOO/OSR are correct</li>
+                <li>Proposed content is consistent with site style</li>
+                <li>All Checklist boxes in the PRQ are appropriately filled out</li>
+                <li>American English spelling is used (unless the client is not US-based)</li>
+                <li>NOB is present on every page</li>
+                <li>New content does not go over 50 words of the chosen page type</li>
+                <li>Content avoids robotic, repetitive, and vague sentence structure and language</li>
+                <li>New content is relevant to the client's business, services, and location</li>
+                <li>If optimizing, the proposed H1/H2 follows the style guide guidelines</li>
+                <li>The H1/H2 maintains geo language, like “Area” or “Serving” if used in the current H1 /@</li>
+                <li>H1s are eight words or less</li>
+                <li>Subheadings are eight words or less</li>
+                <li>Service pages’ new sections of content do not add FAQs to the page.</li>
+                <li>For new service pages, 3 FAQs are included at the end to mimic the format of the existing service pages</li>
+                <li>All proposed page copy changes are made green or struckthrough</li>
+            </ol>
+        </div>
+        
+        <div class="notes-section">
+            <label for="va-analyst">Analyst Name:</label>
+            <input type="text" id="va-analyst" placeholder="Analyst Name">
+            
+            <label for="va-notes">Specific Notes:</label>
+            <textarea id="va-notes" placeholder="Type your notes here..."></textarea>
+            
+            <div class="closing-text">Closing tag: "Please send this back to me when you've made these edits. Thank you!"</div>
+        </div>
+        <button class="copy-btn" onclick="copyCurrentTask('va-check', 'va-analyst', 'va-notes', 'Vendor Analysis')">Copy Vendor Analysis Results</button>
+    </div>
+
+    <!-- Vendor Implementation -->
+    <div id="vendorImpTask" class="task-content">
+        <div class="checklist">
+            <div class="qa-item"><input type="checkbox" class="vi-check" id="vi1"><label for="vi1">1. Screenshot of 2 backups is present</label></div>
+            <div class="qa-item"><input type="checkbox" class="vi-check" id="vi2"><label for="vi2">2. Title tag in Duda matches PRQ</label></div>
+            <div class="qa-item"><input type="checkbox" class="vi-check" id="vi3"><label for="vi3">3. Meta description in Duda matches PRQ</label></div>
+            <div class="qa-item"><input type="checkbox" class="vi-check" id="vi4"><label for="vi4">4. H1/H2 in Duda matches PRQ</label></div>
+            <div class="qa-item"><input type="checkbox" class="vi-check" id="vi5"><label for="vi5">5. Page copy in Duda matches proposed changes</label></div>
+            <div class="qa-item"><input type="checkbox" class="vi-check" id="vi6"><label for="vi6">6. Geos of target keywords are added to the subheadings on the Serving Area page and linked to optimized pages appropriately</label></div>
+            <div class="qa-item"><input type="checkbox" class="vi-check" id="vi7"><label for="vi7">7. Navigation titles are unchanged unless otherwise noted</label></div>
+            <div class="qa-item"><input type="checkbox" class="vi-check" id="vi8"><label for="vi8">8. New pages match the formatting of similar existing pages on the site</label></div>
+            <div class="qa-item"><input type="checkbox" class="vi-check" id="vi9"><label for="vi9">9. Dashboard target keyword mapping matches PRQ target keyword mapping</label></div>
+            <div class="qa-item"><input type="checkbox" class="vi-check" id="vi10"><label for="vi10">10. All optimized pages have topic keywords mapped to them in the dashboard appropriately</label></div>
+            <div class="qa-item"><input type="checkbox" class="vi-check" id="vi11"><label for="vi11">11. Appropriate pages are linked to the appropriate anchor text on each page</label></div>
+            <div class="qa-item"><input type="checkbox" class="vi-check" id="vi12"><label for="vi12">12. NOB appears in the footer and the client’s GBP is linked to the NOB in the footer, if applicable</label></div>
+            <div class="qa-item"><input type="checkbox" class="vi-check" id="vi13"><label for="vi13">13. All optimized pages are linked in the footer</label></div>
+            
+            <h3>Vendor Implementation Feedback (Reference Only)</h3>
+            <ol class="reference-list">
+                <li>Implemented content is approved to post or timed out</li>
+                <li>Screenshot of backup is present for Duda sites</li>
+                <li>Checklist items have been resolved, implemented, or escalated/noted</li>
+                <li>Live title tag matches PRQ</li>
+                <li>Live meta description matches PRQ</li>
+                <li>Live H1/H2 matches PRQ</li>
+                <li>Live page copy matches proposed changes</li>
+                <li>Appropriate pages are linked to the appropriate anchor text on each page</li>
+                <li>Geos of target keywords are added to the subheadings on the Serving Area page and linked to optimized pages appropriately</li>
+                <li>NOB appears in the footer and the client’s GBP is linked to the NOB in the footer, if applicable</li>
+                <li>All optimized pages are linked in the footer. No other pages are linked unless there are less than 3 optimized pages</li>
+                <li>Navigation titles are unchanged unless otherwise noted</li>
+                <li>There are no visible HTML code snippets on the live desktop or mobile site</li>
+                <li>New pages match the formatting of similar existing pages on the site</li>
+                <li>Live site is working on both desktop and mobile views</li>
+            </ol>
+        </div>
+        
+        <div class="notes-section">
+            <label for="vi-analyst">Analyst Name:</label>
+            <input type="text" id="vi-analyst" placeholder="Analyst Name">
+            
+            <label for="vi-notes">Specific Notes:</label>
+            <textarea id="vi-notes" placeholder="Type your notes here..."></textarea>
+            
+            <div class="closing-text">Closing tag: "Please send this back to me when you've made these edits. Thank you!"</div>
+        </div>
+        <button class="copy-btn" onclick="copyCurrentTask('vi-check', 'vi-analyst', 'vi-notes', 'Vendor Implementation')">Copy Vendor Implementation Results</button>
+    </div>
+
+    <div id="successMsg" class="alert">Copied to clipboard!</div>
+    <div id="preview" class="preview-box"></div>
+</div>
+
+<script>
+// Handles switching between the tabs
+function switchTab(evt, taskName) {
+    document.querySelectorAll('.task-content').forEach(content => content.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+    document.getElementById(taskName).classList.add('active');
+    evt.currentTarget.classList.add('active');
+    
+    // Hide preview box when switching tabs
+    document.getElementById("preview").style.display = "none";
+}
+
+// Visual cue: turn text bold/red when checked
+document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+    checkbox.addEventListener('change', function() {
+        const label = this.nextElementSibling;
+        if (this.checked) {
+            label.classList.add('checked-label');
+        } else {
+            label.classList.remove('checked-label');
+        }
+    });
+});
+
+// Helper function to build formatted output
+function buildFormattedText(checkboxes, analystId, noteId, taskType) {
+    let outputText = "";
+    
+    const analystName = document.getElementById(analystId).value.trim() || "[Name]";
+    const notesValue = document.getElementById(noteId).value.trim();
+
+    // 1. Opening Greeting
+    outputText += `Hi ${analystName}! Thanks for your work on this ${taskType}. I have a few notes.\n\n`;
+
+    // 2. Custom Notes (if typed in)
+    if (notesValue) {
+        outputText += notesValue + "\n\n";
+    }
+
+    // 3. Closing Message
+    outputText += `Please send this back to me when you've made these edits. Thank you!\n\n`;
+
+    // 4. Checklist Items at the Bottom
+    checkboxes.forEach(checkbox => {
+        const labelText = checkbox.nextElementSibling.innerText;
+        if (checkbox.checked) {
+            outputText += `<b>${labelText}</b>\n`;
+        } else {
+            outputText += `${labelText}\n`;
+        }
+    });
+
+    return outputText.trim();
+}
+
+// Copies the active task checklist group and formatted notes
+function copyCurrentTask(className, analystId, noteId, taskType) {
+    const checkboxes = document.querySelectorAll(`.${className}`);
+    const outputText = buildFormattedText(checkboxes, analystId, noteId, taskType);
+    handleClipboardCopy(outputText);
+}
+
+function handleClipboardCopy(text) {
+    navigator.clipboard.writeText(text).then(() => {
+        const msg = document.getElementById("successMsg");
+        msg.style.display = "block";
+        
+        const preview = document.getElementById("preview");
+        preview.style.display = "block";
+        preview.textContent = text;
+        
+        setTimeout(() => { msg.style.display = "none"; }, 2500);
+    });
+}
+</script>
+
+</body>
+</html>
