@@ -65,7 +65,7 @@
         <div class="checklist">
             <div class="qa-item"><input type="checkbox" class="blog-check" id="b1"><label for="b1">1. Keyword mapping is appropriate</label></div>
             <div class="qa-item"><input type="checkbox" class="blog-check" id="b2"><label for="b2">2. No more than two keywords are mapped to each page</label></div>
-            <div class="qa-item"><input type="checkbox" class="blog-check" id="b3"><label for="b3">3. All keywords that need optimizations are mapped in the PRQ</label></div>
+            <div class="qa-item"><input type="checkbox" class="blog-check" id="b3"><label for="b3">3. Appropriate keywords are mapped in the PRQ</label></div>
             <div class="qa-item"><input type="checkbox" class="blog-check" id="b4"><label for="b4">4. NOB is accurate or has been escalated</label></div>
             <div class="qa-item"><input type="checkbox" class="blog-check" id="b5"><label for="b5">5. Title tag follows style guide guidelines</label></div>
             <div class="qa-item"><input type="checkbox" class="blog-check" id="b6"><label for="b6">6. Meta description follows style guide guidelines</label></div>
